@@ -6,6 +6,7 @@ import sys
 import json
 from datetime import datetime
 from selenium import webdriver
+from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import Select
 from colorama import Fore
 from colorama import Style
@@ -105,8 +106,35 @@ GuestCheckout.click()
 
 # ///STOPPED HERE ///
 # Shipping Information
-submitFirstName = driver.find_element_by_xpath()
-submitFirstName.send_keys("test")
+time.sleep(6)
+
+firstnamebox = driver.find_element_by_id(
+    'consolidatedAddresses.ui_address_2.firstName')
+firstnamebox.send_keys(shippingData['FirstName'])
+
+lastnamebox = driver.find_element_by_id(
+    'consolidatedAddresses.ui_address_2.lastName')
+lastnamebox.send_keys(shippingData['LastName'])
+
+addressbox = driver.find_element_by_id(
+    'consolidatedAddresses.ui_address_2.street')
+addressbox.send_keys(shippingData['Address'])
+# Im a fucking god // stopping here for the night
+webdriver.ActionChains(driver).send_keys(Keys.ESCAPE).perform()
+
+# May implement means of only sending this if APT != Null in JSON
+aptbox = driver.find_element_by_id(
+    'consolidatedAddresses.ui_address_2.street2')
+aptbox.send_keys(shippingData['AptNumber'])
+
+citybox = driver.find_element_by_id(
+    'consolidatedAddresses.ui_address_2.city')
+citybox.send_keys(['City'])
+
+# Dropdown menu here. Make sure that we are using state Abbreviations so the kid doesnt have to write a dict. thnx
+selectOneState = Select(driver.find_element_by_class_name('smart-select'))
+selectOneState.select_by_visible_text(['State'])
+
 
 # submitFirstName.clear()
 # submitFirstName.send_keys("test")
