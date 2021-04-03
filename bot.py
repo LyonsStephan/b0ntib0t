@@ -103,38 +103,67 @@ print("* Checking out as Guest")
 GuestCheckout = driver.find_element_by_css_selector('.guest')
 GuestCheckout.click()
 
-
-# ///STOPPED HERE ///
 # Shipping Information
 time.sleep(6)
 
+# Input firstname
 firstnamebox = driver.find_element_by_id(
     'consolidatedAddresses.ui_address_2.firstName')
 firstnamebox.send_keys(shippingData['FirstName'])
 
+# Input lastname
 lastnamebox = driver.find_element_by_id(
     'consolidatedAddresses.ui_address_2.lastName')
 lastnamebox.send_keys(shippingData['LastName'])
 
+# Street Address Interactive box nonsense
 addressbox = driver.find_element_by_id(
     'consolidatedAddresses.ui_address_2.street')
 addressbox.send_keys(shippingData['Address'])
-# Im a fucking god // stopping here for the night
+
+# Im a fucking god -- Escape the dropdown for street address
 webdriver.ActionChains(driver).send_keys(Keys.ESCAPE).perform()
 
-# May implement means of only sending this if APT != Null in JSON
-aptbox = driver.find_element_by_id(
-    'consolidatedAddresses.ui_address_2.street2')
-aptbox.send_keys(shippingData['AptNumber'])
+# Click Apartment dropdown box if apartment number is present in JSON otherwise skip it
+if shippingData['AptNumber'] != None:
+    aptDropdownButton = driver.find_element_by_class_name(
+        'address-form__showAddress2Link')
+    aptDropdownButton.click()
+    # wait time here to allow the element to load
+    time.sleep(1)
+    aptDropdownBox = driver.find_element_by_id(
+        'consolidatedAddresses.ui_address_2.street2')
+    aptDropdownBox.send_keys(shippingData['AptNumber'])
+else:
+    pass
 
+# Pass in city
 citybox = driver.find_element_by_id(
     'consolidatedAddresses.ui_address_2.city')
-citybox.send_keys(['City'])
+citybox.send_keys(shippingData['City'])
 
-# Dropdown menu here. Make sure that we are using state Abbreviations so the kid doesnt have to write a dict. thnx
-selectOneState = Select(driver.find_element_by_class_name('smart-select'))
-selectOneState.select_by_visible_text(['State'])
+# Input state, probably a cleaner way to do this
+state = shippingData['State']
+selectOneItem = Select(
+    driver.find_element_by_class_name('smart-select'))
+selectOneItem.select_by_visible_text(state)
 
+# Input zip code
+addressbox = driver.find_element_by_id(
+    'consolidatedAddresses.ui_address_2.zipcode')
+addressbox.send_keys(shippingData['Zip'])
 
-# submitFirstName.clear()
-# submitFirstName.send_keys("test")
+# Contact Information - email
+emailBox = driver.find_element_by_id(
+    'user.emailAddress')
+emailBox.send_keys(shippingData['email'])
+
+# Contact Information - phone number
+phoneBox = driver.find_element_by_id(
+    'user.phone')
+phoneBox.send_keys(shippingData['phone'])
+
+# Continue to payment info button
+print(Fore.YELLOW + "Proceeding to Payment Information...")
+pyamentButton = driver.find_element_by_class_name('btn-lg')
+pyamentButton.click()
