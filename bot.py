@@ -6,6 +6,7 @@ import sys
 import json
 from datetime import datetime
 from selenium import webdriver
+from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import Select
 from colorama import Fore
 from colorama import Style
@@ -102,11 +103,67 @@ print("* Checking out as Guest")
 GuestCheckout = driver.find_element_by_css_selector('.guest')
 GuestCheckout.click()
 
-
-# ///STOPPED HERE ///
 # Shipping Information
-submitFirstName = driver.find_element_by_xpath()
-submitFirstName.send_keys("test")
+time.sleep(6)
 
-# submitFirstName.clear()
-# submitFirstName.send_keys("test")
+# Input firstname
+firstnamebox = driver.find_element_by_id(
+    'consolidatedAddresses.ui_address_2.firstName')
+firstnamebox.send_keys(shippingData['FirstName'])
+
+# Input lastname
+lastnamebox = driver.find_element_by_id(
+    'consolidatedAddresses.ui_address_2.lastName')
+lastnamebox.send_keys(shippingData['LastName'])
+
+# Street Address Interactive box nonsense
+addressbox = driver.find_element_by_id(
+    'consolidatedAddresses.ui_address_2.street')
+addressbox.send_keys(shippingData['Address'])
+
+# Im a fucking god -- Escape the dropdown for street address
+webdriver.ActionChains(driver).send_keys(Keys.ESCAPE).perform()
+
+# Click Apartment dropdown box if apartment number is present in JSON otherwise skip it
+if shippingData['AptNumber'] != None:
+    aptDropdownButton = driver.find_element_by_class_name(
+        'address-form__showAddress2Link')
+    aptDropdownButton.click()
+    # wait time here to allow the element to load
+    time.sleep(1)
+    aptDropdownBox = driver.find_element_by_id(
+        'consolidatedAddresses.ui_address_2.street2')
+    aptDropdownBox.send_keys(shippingData['AptNumber'])
+else:
+    pass
+
+# Pass in city
+citybox = driver.find_element_by_id(
+    'consolidatedAddresses.ui_address_2.city')
+citybox.send_keys(shippingData['City'])
+
+# Input state, probably a cleaner way to do this
+state = shippingData['State']
+selectOneItem = Select(
+    driver.find_element_by_class_name('smart-select'))
+selectOneItem.select_by_visible_text(state)
+
+# Input zip code
+addressbox = driver.find_element_by_id(
+    'consolidatedAddresses.ui_address_2.zipcode')
+addressbox.send_keys(shippingData['Zip'])
+
+# Contact Information - email
+emailBox = driver.find_element_by_id(
+    'user.emailAddress')
+emailBox.send_keys(shippingData['email'])
+
+# Contact Information - phone number
+phoneBox = driver.find_element_by_id(
+    'user.phone')
+phoneBox.send_keys(shippingData['phone'])
+
+# Continue to payment info button
+print(Fore.YELLOW + "Proceeding to Payment Information...")
+pyamentButton = driver.find_element_by_class_name('btn-lg')
+pyamentButton.click()
