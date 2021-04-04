@@ -16,8 +16,8 @@ from colorama import init
 now = datetime.now()
 
 # load up all shipping/payment data from json files
-ReadshippingData = open('shipping.json',)
-shippingData = json.load(ReadshippingData)
+ReadUserData = open('user.json',)
+UserData = json.load(ReadUserData)
 
 print('  ____   ___  _   _ _______ _____       ____   ____ _______ ')
 print(' |  _ \ / _ \| \ | |__   __|_   _|     |  _ \ / __ \__   __|')
@@ -109,23 +109,23 @@ time.sleep(6)
 # Input firstname
 firstnamebox = driver.find_element_by_id(
     'consolidatedAddresses.ui_address_2.firstName')
-firstnamebox.send_keys(shippingData['FirstName'])
+firstnamebox.send_keys(UserData['FirstName'])
 
 # Input lastname
 lastnamebox = driver.find_element_by_id(
     'consolidatedAddresses.ui_address_2.lastName')
-lastnamebox.send_keys(shippingData['LastName'])
+lastnamebox.send_keys(UserData['LastName'])
 
 # Street Address Interactive box nonsense
 addressbox = driver.find_element_by_id(
     'consolidatedAddresses.ui_address_2.street')
-addressbox.send_keys(shippingData['Address'])
+addressbox.send_keys(UserData['Address'])
 
 # Im a fucking god -- Escape the dropdown for street address
 webdriver.ActionChains(driver).send_keys(Keys.ESCAPE).perform()
 
 # Click Apartment dropdown box if apartment number is present in JSON otherwise skip it
-if shippingData['AptNumber'] != None:
+if UserData['AptNumber'] != None:
     aptDropdownButton = driver.find_element_by_class_name(
         'address-form__showAddress2Link')
     aptDropdownButton.click()
@@ -133,17 +133,17 @@ if shippingData['AptNumber'] != None:
     time.sleep(1)
     aptDropdownBox = driver.find_element_by_id(
         'consolidatedAddresses.ui_address_2.street2')
-    aptDropdownBox.send_keys(shippingData['AptNumber'])
+    aptDropdownBox.send_keys(UserData['AptNumber'])
 else:
     pass
 
 # Pass in city
 citybox = driver.find_element_by_id(
     'consolidatedAddresses.ui_address_2.city')
-citybox.send_keys(shippingData['City'])
+citybox.send_keys(UserData['City'])
 
 # Input state, probably a cleaner way to do this
-state = shippingData['State']
+state = UserData['State']
 selectOneItem = Select(
     driver.find_element_by_class_name('smart-select'))
 selectOneItem.select_by_visible_text(state)
@@ -151,19 +151,44 @@ selectOneItem.select_by_visible_text(state)
 # Input zip code
 addressbox = driver.find_element_by_id(
     'consolidatedAddresses.ui_address_2.zipcode')
-addressbox.send_keys(shippingData['Zip'])
+addressbox.send_keys(UserData['Zip'])
 
 # Contact Information - email
 emailBox = driver.find_element_by_id(
     'user.emailAddress')
-emailBox.send_keys(shippingData['email'])
+emailBox.send_keys(UserData['email'])
 
 # Contact Information - phone number
 phoneBox = driver.find_element_by_id(
     'user.phone')
-phoneBox.send_keys(shippingData['phone'])
+phoneBox.send_keys(UserData['phone'])
 
 # Continue to payment info button
 print(Fore.YELLOW + "Proceeding to Payment Information...")
-pyamentButton = driver.find_element_by_class_name('btn-lg')
-pyamentButton.click()
+paymentButton = driver.find_element_by_class_name('btn-lg')
+paymentButton.click()
+
+# Collect total order price
+orderTotal = driver.find_element_by_class_name(
+    'order-summary__total').find_element_by_class_name('cash-money')
+print(
+    f'* Order Total: {Fore.GREEN}%s{Style.RESET_ALL}' % (orderTotal.get_attribute('innerText')))
+
+# Input CC information
+# Print last 4
+lastfour_cc_set = UserData['creditcard']
+lastfour_cc = (lastfour_cc_set[-4:])
+print(
+    f'* Using Card Number Ending In: {Fore.GREEN}%s{Style.RESET_ALL}' % (lastfour_cc))
+
+# Input CC info
+time.sleep(5)
+ccbox = driver.find_element_by_id("optimized-cc-card-number")
+ccbox.send_keys(UserData['creditcard'])
+
+# SUBMIT THE ORDER
+SUBMIT_ORDER_BUTTON = driver.find_element_by_class_name('btn-primary')
+SUBMIT_ORDER_BUTTON.click()
+
+print(Fore.MAGENTA + "* Order has been submitted! Please check %s for Order Details." %
+      (UserData['email']))
