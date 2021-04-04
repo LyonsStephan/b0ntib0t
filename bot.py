@@ -93,6 +93,13 @@ selectOneItem = Select(
 selectOneItem.select_by_visible_text(DesiredQuantity)
 print("* Quantity Updated.")
 
+# Manage shipping -- Set to ship instead of pickup (if default)
+if driver.find_element_by_class_name('ispu-card__switch') != None:
+    switch_to_ship = driver.find_element_by_class_name('ispu-card__switch')
+    switch_to_ship.click()
+else:
+    pass
+
 # Begin Checkout
 print(Fore.YELLOW + "Beginning Checkout Process...")
 CheckoutButton = driver.find_element_by_class_name('btn-primary')
