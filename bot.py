@@ -30,9 +30,7 @@ print('B0NTI B0T STARTED AT :', now)
 
 init(autoreset=True)
 # Throw the full URL in this thing until I can create a cleaner variable // Using two links here, available and unavailable to test
-# BestBuyLink = "https://www.bestbuy.com/site/insignia-ultra-thin-wrap-case-for-apple-iphone-11-smoky-black/6359015.p?skuId=6359015"
-BestBuyLink = "https://www.bestbuy.com/site/balan-wonderworld-nintendo-switch/6413951.p?skuId=6413951"
-# BestBuyLink = 'https://www.bestbuy.com/site/msi-aegis-zs-gaming-desktop-amd-ryzen-3700x-16gb-memory-rx-5600xt-512gb-ssd-black/6431203.p?skuId=6431203'
+BestBuyLink = "https://www.bestbuy.com/site/rocketfish-90-degree-coaxial-cable-adapter-2-pack-gold/5722600.p?skuId=5722600"
 # Set the path to the chrome driver, keep this shit relative to the rest of the package
 PATH = os.getcwd() + "/chromedriver"
 driver = webdriver.Chrome(PATH)
@@ -174,17 +172,30 @@ orderTotal = driver.find_element_by_class_name(
 print(
     f'* Order Total: {Fore.GREEN}%s{Style.RESET_ALL}' % (orderTotal.get_attribute('innerText')))
 
-# Input CC information
-# Print last 4
+# Input CC information Print last 4
 lastfour_cc_set = UserData['creditcard']
 lastfour_cc = (lastfour_cc_set[-4:])
 print(
     f'* Using Card Number Ending In: {Fore.GREEN}%s{Style.RESET_ALL}' % (lastfour_cc))
 
 # Input CC info
-time.sleep(5)
+time.sleep(6)
 ccbox = driver.find_element_by_id("optimized-cc-card-number")
 ccbox.send_keys(UserData['creditcard'])
+time.sleep(1.5)
+# Expiration Month
+expirationMonth = UserData['creditcardMonth']
+selectOneItem = Select(
+    driver.find_element_by_xpath("//*[@id='credit-card-expiration-month']/div/div/select"))
+selectOneItem.select_by_visible_text(expirationMonth)
+# Expiration Year
+expirationYear = UserData['creditcardYear']
+selectOneItem = Select(
+    driver.find_element_by_xpath("//*[@id='credit-card-expiration-year']/div/div/select"))
+selectOneItem.select_by_visible_text(expirationYear)
+# CC CVV
+ccbox = driver.find_element_by_id("credit-card-cvv")
+ccbox.send_keys(UserData['cvv'])
 
 # SUBMIT THE ORDER
 SUBMIT_ORDER_BUTTON = driver.find_element_by_class_name('btn-primary')
