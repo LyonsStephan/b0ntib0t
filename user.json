@@ -1,12 +1,15 @@
 {
-    "FirstName": "Stephan",
-    "LastName": "Lyons",
-    "Address": "303 Market Street",
-    "AptNumber": "322",
-    "City": "San Diego",
-    "State": "CA",
-    "Zip": "92101",
-    "email": "lyons.stephan@yahoo.com",
-    "phone": "321 947-9895",
-    "creditcard": "123456789"
+    "FirstName": "Christian",
+    "LastName": "Conti",
+    "Address": "409 halsey st",
+    "AptNumber": "",
+    "City": "Orlando",
+    "State": "FL",
+    "Zip": "32839",
+    "email": "cconti02@gmail.com",
+    "phone": "4072568601",
+    "creditcard": "123456789",
+    "creditcardMonth": "04",
+    "creditcardYear": "2026",
+    "cvv": "6427"
 }
