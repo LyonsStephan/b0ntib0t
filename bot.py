@@ -8,6 +8,9 @@ from datetime import datetime
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import Select
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.common.by import By
 from colorama import Fore
 from colorama import Style
 from colorama import init
@@ -30,7 +33,9 @@ print('B0NTI B0T STARTED AT :', now)
 
 init(autoreset=True)
 # Throw the full URL in this thing until I can create a cleaner variable // Using two links here, available and unavailable to test
+#BestBuyLink = "https://www.bestbuy.com/site/msi-mech-oc-amd-radeon-rx-5700-xt-8gb-gddr6-pci-express-4-0-graphics-card-black/6374966.p?skuId=6374966"
 BestBuyLink = "https://www.bestbuy.com/site/rocketfish-90-degree-coaxial-cable-adapter-2-pack-gold/5722600.p?skuId=5722600"
+
 # Set the path to the chrome driver, keep this shit relative to the rest of the package
 PATH = os.getcwd() + "/chromedriver"
 driver = webdriver.Chrome(PATH)
@@ -45,6 +50,8 @@ itemName = titlePage.replace(" - Best Buy", "")
 print(f'* Checking for Item: {Fore.GREEN}%s{Style.RESET_ALL}' % (itemName))
 
 # Variablize Availability
+WebDriverWait(driver, 30).until(
+    EC.presence_of_element_located((By.CLASS_NAME, "add-to-cart-button")))
 AddToCartButton = driver.find_element_by_class_name('add-to-cart-button')
 Availability = (AddToCartButton.get_property('innerText'))
 
@@ -65,8 +72,8 @@ else:
 while Availability == "Sold Out":
     print(Fore.RED + 'Item - %s is sold out. Retrying...' % (itemName))
     driver.refresh()
-    time.sleep(7)
-    AddToCartButton = driver.find_element_by_class_name('add-to-cart-button')
+    AddToCartButton = WebDriverWait(driver, 30).until(
+        EC.presence_of_element_located((By.CLASS_NAME, "add-to-cart-button")))
     Availability = (AddToCartButton.get_property('innerText'))
     print(Availability)
     if Availability == "Add to Cart":
@@ -81,28 +88,34 @@ AddToCartButton.click()
 print('Preparing Cart...')
 cart = 'https://bestbuy.com/cart'
 driver.get(cart)
-time.sleep(5)
 
 # Manage Quantity
 DesiredQuantity = "1"
 print(Fore.CYAN + "Quantity of desired item is %s" % (DesiredQuantity))
-selectOneItem = Select(
-    driver.find_element_by_class_name('fluid-item__quantity'))
-selectOneItem.select_by_visible_text(DesiredQuantity)
+WebDriverWait(driver, 30).until(EC.presence_of_element_located(
+    (By.CLASS_NAME, "fluid-item__quantity")))
+selectQuantity = Select(
+    driver.find_element_by_class_name("fluid-item__quantity"))
+selectQuantity.select_by_visible_text(DesiredQuantity)
 print("* Quantity Updated.")
 
 # Begin Checkout
 print(Fore.YELLOW + "Beginning Checkout Process...")
+WebDriverWait(driver, 30).until(
+    EC.presence_of_element_located((By.CLASS_NAME, "btn-primary")))
 CheckoutButton = driver.find_element_by_class_name('btn-primary')
 CheckoutButton.click()
-time.sleep(5)
+
 # Checkout As Guest // Not sure why CSS selection is the only thing that works here? shit stupid
 print("* Checking out as Guest")
+WebDriverWait(driver, 30).until(
+    EC.presence_of_element_located((By.CSS_SELECTOR, ".guest")))
 GuestCheckout = driver.find_element_by_css_selector('.guest')
 GuestCheckout.click()
 
 # Shipping Information
-time.sleep(6)
+WebDriverWait(driver, 30).until(EC.presence_of_element_located(
+    (By.CLASS_NAME, "btn-primary")))
 
 # Input firstname
 firstnamebox = driver.find_element_by_id(
@@ -127,8 +140,8 @@ if UserData['AptNumber'] != None:
     aptDropdownButton = driver.find_element_by_class_name(
         'address-form__showAddress2Link')
     aptDropdownButton.click()
-    # wait time here to allow the element to load
-    time.sleep(1)
+    WebDriverWait(driver, 30).until(
+        EC.presence_of_element_located((By.ID, "consolidatedAddresses.ui_address_2.street2")))
     aptDropdownBox = driver.find_element_by_id(
         'consolidatedAddresses.ui_address_2.street2')
     aptDropdownBox.send_keys(UserData['AptNumber'])
@@ -167,6 +180,8 @@ paymentButton = driver.find_element_by_class_name('btn-lg')
 paymentButton.click()
 
 # Collect total order price
+WebDriverWait(driver, 30).until(
+    EC.presence_of_element_located((By.CLASS_NAME, "cash-money")))
 orderTotal = driver.find_element_by_class_name(
     'order-summary__total').find_element_by_class_name('cash-money')
 print(
@@ -179,11 +194,13 @@ print(
     f'* Using Card Number Ending In: {Fore.GREEN}%s{Style.RESET_ALL}' % (lastfour_cc))
 
 # Input CC info
-time.sleep(6)
+WebDriverWait(driver, 30).until(
+    EC.presence_of_element_located((By.ID, "optimized-cc-card-number")))
 ccbox = driver.find_element_by_id("optimized-cc-card-number")
 ccbox.send_keys(UserData['creditcard'])
-time.sleep(1.5)
 # Expiration Month
+WebDriverWait(driver, 30).until(
+    EC.presence_of_element_located((By.XPATH, "//*[@id='credit-card-expiration-month']/div/div/select")))
 expirationMonth = UserData['creditcardMonth']
 selectOneItem = Select(
     driver.find_element_by_xpath("//*[@id='credit-card-expiration-month']/div/div/select"))
