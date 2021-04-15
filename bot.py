@@ -1,4 +1,4 @@
-# B0NTI BOT V.0.1
+# B0NTI BOT V.0.2
 
 import os
 import time
