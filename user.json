@@ -1,15 +1,15 @@
 {
-    "FirstName": "Christian",
-    "LastName": "Conti",
-    "Address": "409 halsey st",
+    "FirstName": "John",
+    "LastName": "Doe",
+    "Address": "409 crenshaw st",
     "AptNumber": "",
     "City": "Orlando",
     "State": "FL",
     "Zip": "32839",
-    "email": "cconti02@gmail.com",
-    "phone": "4072568601",
+    "email": "johndoe@gmail.com",
+    "phone": "1234567890",
     "creditcard": "00000000000",
-    "creditcardMonth": "04",
-    "creditcardYear": "2026",
-    "cvv": "6427"
+    "creditcardMonth": "01",
+    "creditcardYear": "2000",
+    "cvv": "123"
 }
