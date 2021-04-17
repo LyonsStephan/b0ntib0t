@@ -1,5 +1,3 @@
-# B0NTI BOT V.0.2
-
 import os
 import time
 import sys
@@ -14,6 +12,18 @@ from selenium.webdriver.common.by import By
 from colorama import Fore
 from colorama import Style
 from colorama import init
+
+
+# ----------------- EDIT THIS SECTION ONLY! -----------------
+
+# Paste Link to Item below in between quotes:
+BestBuyLink = "https://www.bestbuy.com/site/rocketfish-90-degree-coaxial-cable-adapter-2-pack-gold/5722600.p?skuId=5722600"
+
+# Update Quantity Desired Below:
+DesiredQuantity = "1"
+
+# ----------------- DO NOT EDIT BELOW THIS LINE! -----------------
+
 
 # print current date time of moment bontibot is kicked off
 now = datetime.now()
@@ -32,9 +42,7 @@ print('')
 print('B0NTI B0T STARTED AT :', now)
 
 init(autoreset=True)
-# Throw the full URL in this thing until I can create a cleaner variable // Using two links here, available and unavailable to test
-#BestBuyLink = "https://www.bestbuy.com/site/msi-mech-oc-amd-radeon-rx-5700-xt-8gb-gddr6-pci-express-4-0-graphics-card-black/6374966.p?skuId=6374966"
-BestBuyLink = "https://www.bestbuy.com/site/rocketfish-90-degree-coaxial-cable-adapter-2-pack-gold/5722600.p?skuId=5722600"
+
 
 # Set the path to the chrome driver, keep this shit relative to the rest of the package
 PATH = os.getcwd() + "/Resources/chromedriver"
@@ -90,7 +98,7 @@ cart = 'https://bestbuy.com/cart'
 driver.get(cart)
 
 # Manage Quantity
-DesiredQuantity = "1"
+# DesiredQuantity = "1" // Moved this to top of script
 print(Fore.CYAN + "Quantity of desired item is %s" % (DesiredQuantity))
 WebDriverWait(driver, 30).until(EC.presence_of_element_located(
     (By.CLASS_NAME, "fluid-item__quantity")))
