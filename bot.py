@@ -37,7 +37,7 @@ init(autoreset=True)
 BestBuyLink = "https://www.bestbuy.com/site/rocketfish-90-degree-coaxial-cable-adapter-2-pack-gold/5722600.p?skuId=5722600"
 
 # Set the path to the chrome driver, keep this shit relative to the rest of the package
-PATH = os.getcwd() + "/chromedriver"
+PATH = os.getcwd() + "/Resources/chromedriver"
 driver = webdriver.Chrome(PATH)
 
 # have selenium navigate to item
