@@ -11,5 +11,6 @@
     "creditcard": "00000000000",
     "creditcardMonth": "01",
     "creditcardYear": "2000",
-    "cvv": "123"
+    "cvv": "123",
+    "DiscordWebhookLink": ""
 }

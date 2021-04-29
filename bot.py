@@ -2,7 +2,9 @@ import os
 import time
 import sys
 import json
+import requests
 from datetime import datetime
+from discord import Webhook, RequestsWebhookAdapter
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import Select
@@ -31,6 +33,10 @@ now = datetime.now()
 # load up all shipping/payment data from json files
 ReadUserData = open('user.json',)
 UserData = json.load(ReadUserData)
+
+# Setup Discord Webhook here
+webhook = Webhook.from_url(
+    UserData['DiscordWebhookLink'], adapter=RequestsWebhookAdapter())
 
 print('  ____   ___  _   _ _______ _____       ____   ____ _______ ')
 print(' |  _ \ / _ \| \ | |__   __|_   _|     |  _ \ / __ \__   __|')
@@ -69,10 +75,15 @@ if Availability == "Sold Out":
     # see While loop on line 50
 elif Availability == "Add to Cart":
     print("Item is available!")
+    webhook.send("Items is available: %s" % (itemName))
+    webhook.send("Link: %s" % (BestBuyLink))
 else:
     print(Fore.RED + "Theres some weird shit going on here, item is not available for online purchase?")
     print("Printing Output below... Then Quitting until I can account for this... Try another Item.")
     print(Availability)
+    webhook.send(
+        "Items status has changed! Check the link below!: %s" % (itemName))
+    webhook.send("Link: %s" % (BestBuyLink))
     # Using close here instead of quit, when close called then only tab with FOCUS is closed. Allows multiple runs
     driver.close()
     exit()
